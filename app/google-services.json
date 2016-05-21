@@ -1,0 +1,52 @@
+{
+  "project_info": {
+    "project_number": "965844430540",
+    "project_id": "auth0test-1244"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:965844430540:android:c509dd816e996e22",
+        "android_client_info": {
+          "package_name": "com.auth0.sample"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "965844430540-m8dl0agvj9s5ulvm70nd4h2mhl9ml92s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.auth0.sample",
+            "certificate_hash": "DA2CF87A89C6B72F691767EF0286CDF2911424EB"
+          }
+        },
+        {
+          "client_id": "965844430540-hbi7grmo4fvm0c829her5eqvtle07m90.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "965844430540-slu97udmr277136a8qp5sno07im4a58e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAInRr8U3ieh4VzI2DNPQ8Ars41OY39lDU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
