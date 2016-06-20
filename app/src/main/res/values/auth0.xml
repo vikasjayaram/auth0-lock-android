@@ -28,4 +28,6 @@
     <string name="auth0_scheme">a0fcijzs00d0vkkxwwziuihy7yc8sjle5x</string>
     <string name="auth0_domain">vjayaram.au.auth0.com</string>
     <string name="facebook_app_id">314651472042375</string>
+    <string name="role">arn:aws:iam::337171985378:role/access-to-s3-per-user</string>
+    <string name="principle">arn:aws:iam::337171985378:saml-provider/auth0-provider</string>
 </resources>

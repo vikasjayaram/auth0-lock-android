@@ -34,15 +34,21 @@ import com.auth0.lock.LockContext;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SampleApplication extends Application {
 
     public void onCreate() {
         super.onCreate();
+        List<String> fbPermissions = new ArrayList<>();
+        fbPermissions.add("public_profile");
+        fbPermissions.add("email");
 
         LockContext.configureLock(
                 new Lock.Builder()
                         .loadFromApplication(this)
-                        .withIdentityProvider(Strategies.Facebook, new FacebookIdentityProvider(this))
+                        .withIdentityProvider(Strategies.Facebook, new FacebookIdentityProvider(this, fbPermissions))
                         .withIdentityProvider(Strategies.GooglePlus, new GooglePlusIdentityProvider(this))
                         .closable(true)
         );

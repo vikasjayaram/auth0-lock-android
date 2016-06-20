@@ -34,9 +34,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import java.util.Map;
+import java.util.logging.Logger;
 
+import com.auth0.core.Token;
 import com.auth0.core.UserProfile;
 import com.auth0.lock.Lock;
+import com.auth0.lock.LockContext;
+import com.auth0.api.authentication.AuthenticationAPIClient;
+import com.auth0.api.ParameterBuilder;
+import com.auth0.api.callback.BaseCallback;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -55,7 +62,7 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
         UserProfile profile = getIntent().getParcelableExtra(Lock.AUTHENTICATION_ACTION_PROFILE_PARAMETER);
         TextView greetingTextView = (TextView) findViewById(R.id.welcome_message);
-        greetingTextView.setText("Welcome " + profile.getName());
+        greetingTextView.setText("Welcome " + profile.getEmail());
         ImageView profileImageView = (ImageView) findViewById(R.id.profile_image);
         if (profile.getPictureURL() != null) {
             ImageLoader.getInstance().displayImage(profile.getPictureURL(), profileImageView);
@@ -63,11 +70,12 @@ public class ProfileActivity extends AppCompatActivity {
 
         client = new AsyncHttpClient();
         client.setMaxRetriesAndTimeout(0, 5000);
+        Log.d("principal", getResources().getString(R.string.principle));
         Button callAPIButton = (Button) findViewById(R.id.call_api_button);
         callAPIButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callAPI();
+                callDelegationEndPoint();
             }
         });
     }
@@ -88,6 +96,40 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
+    public void callDelegationEndPoint() {
+        UserProfile profile = getIntent().getParcelableExtra(Lock.AUTHENTICATION_ACTION_PROFILE_PARAMETER);
+        Token authToken = getIntent().getParcelableExtra(Lock.AUTHENTICATION_ACTION_TOKEN_PARAMETER);
+        Lock lock = LockContext.getLock(this);
+        AuthenticationAPIClient client = lock.getAuthenticationAPIClient();
+        String apiType = "aws";
+        String principal = "arn:aws:iam::337171985378:saml-provider/auth0-provider";
+        String role = "arn:aws:iam::337171985378:role/access-to-s3-per-user";
+        String token = authToken.getIdToken();//Your Auth0 id_token of the logged in User
+
+        Map<String, Object> parameters = ParameterBuilder.newEmptyBuilder()
+
+                .set("id_token", token)
+                .set("api_type", apiType)
+                .set("role", role)
+                .set("principal", principal)
+                .asDictionary();
+
+        Log.d("parameters", parameters.toString());
+        client
+                .delegation()
+                .addParameters(parameters).start(new BaseCallback<Map<String, Object>>() {
+            @Override
+            public void onSuccess(Map<String, Object> payload) {
+                //Your AWS token will be in payload
+                Log.d("delegation credentials", payload.toString());
+            }
+
+            @Override
+            public void onFailure(Throwable error) {
+                //Delegation call failed
+            }
+        });
+    }
     public static AlertDialog showAlertDialog(Context context, String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder
